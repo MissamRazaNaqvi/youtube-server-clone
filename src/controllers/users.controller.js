@@ -1,6 +1,6 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
-import { UserModel } from "../models/user.models.js";
+import { userModel } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudnary.service.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
@@ -33,7 +33,7 @@ const registerUser = asyncHandler(async (req, res) => {
     //   throw new ApiError(400, "All fields are required");
     // }
 
-    const existedUser = await UserModel.findOne({ email })
+    const existedUser = await userModel.findOne({ email })
 
     if (existedUser) {
         // console.log("user already exist with this email")
@@ -61,7 +61,7 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Avatar image is required")
     }
 
-    const user = await UserModel.create({
+    const user = await userModel.create({
         username: username.toLowerCase(),
         email,
         fullname,
@@ -72,7 +72,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // console.log(user, 'user data from mongo')
 
-    const createdUser = await UserModel.findById(user._id).select(" -password -refreshToken")
+    const createdUser = await userModel.findById(user._id).select(" -password -refreshToken")
     
     // console.log(createdUser, 'created user data from mongo')
 

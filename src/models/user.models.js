@@ -50,13 +50,14 @@ const userSchema = mongoose.Schema(
 )
 
 // pre method run before save data into mongodb
-userSchema.pre("save", async function (next) {
-    if (!this.isModified('password'))
-        return next();
+userSchema.pre("save", async function () {
 
-    this.password = bcrypt.hash(this.password, 10);
-    next();
-})
+    if (!this.isModified("password")) {
+        return;
+    }
+
+    this.password = await bcrypt.hash(this.password, 10);
+});
 
 
 userSchema.methods.isPasswordCorrect = async function (password) {
