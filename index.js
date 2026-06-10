@@ -13,7 +13,6 @@ dbConnect()
   .catch((error) => {
     console.error("MongoDB connection failed:", error);
   });
-//check
 
 app.get('/',(req, res)=>{
     res.send("Hellow your server running..........")

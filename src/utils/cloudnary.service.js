@@ -14,7 +14,7 @@ const uploadOnCloudinary = async (localfilepath) => {
 
         const uploadResult = await cloudinary.uploader.upload(localfilepath, { resource_type: 'auto' });
 
-        console.log(uploadResult)
+        // console.log(uploadResult,"Result from cloudinary")
 
         // Optimize delivery by resizing and applying auto-format and auto-quality
         // const optimizeUrl = cloudinary.url('shoes', {
@@ -33,11 +33,14 @@ const uploadOnCloudinary = async (localfilepath) => {
         // });
 
         // console.log(autoCropUrl);
+        
+        fs.unlinkSync(localfilepath);//remove local saved temporary file as the upload operation failed
+
 
         return uploadResult;
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
 
         fs.unlinkSync(localfilepath);//remove local saved temporary file as the upload operation failed
         return null;
