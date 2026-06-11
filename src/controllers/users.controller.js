@@ -126,7 +126,7 @@ const loginUser = asyncHandler(async (req, res) => {
     if (!userExist) {
         throw new ApiError(400, "user not exist ")
     }
-    else{
+    else {
         console.log(userExist, 'userExist')
     }
 
@@ -146,7 +146,7 @@ const loginUser = asyncHandler(async (req, res) => {
     }
 
     return res.status(200)
-        .cookie("accessTokenn", accessToken, options)
+        .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
         .json(
             new ApiResponse(200, { user: loggedInUser, accessToken, refreshToken }, "User logged In successfully.")
@@ -154,18 +154,20 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 const logOutUser = asyncHandler(async (req, res) => {
-    // req.user._id 
-    console.log(req.body,"req.body")
+    console.log(req.user._id ,'req.user._id ')
+
     await userModel.findByIdAndUpdate(
-        req.user._id, {
-        $set: {
-            refreshToken: undefined
-        }
-    },
+        req.user._id,
         {
-            new: true
+            $set: {
+                refreshToken: undefined 
+            }
+        },
+        {
+            returnDocument: true
         }
     )
+    const { accessTokenn, refreshToken } = await generateAccessTokenAndGenerateRefreshToken(req.user._id);
 
     const options = {
         httpOnly: true,
@@ -173,9 +175,9 @@ const logOutUser = asyncHandler(async (req, res) => {
     }
 
     res.status(200)
-    .clearCookie("accessTokenn", accessToken, options)
-    .clearCookie("refreshToken", refreshToken, options)
-    .json(new ApiResponse(200, {}, "User Logged Out"))
+        .clearCookie("accessToken", accessTokenn, options)
+        .clearCookie("refreshToken", refreshToken, options)
+        .json(new ApiResponse(200, {}, "User Logged Out"))
 
 })
 
